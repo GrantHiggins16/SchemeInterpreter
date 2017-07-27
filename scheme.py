@@ -64,7 +64,6 @@ def scheme_apply(procedure, args, env):
         value = scheme_eval(procedure.body, frame)
         return value
     elif isinstance(procedure, MuProcedure):
-        "*** YOUR CODE HERE ***"
         frame = env.make_call_frame(procedure.formals, args)
         return scheme_eval(procedure.body, frame)
     else:
