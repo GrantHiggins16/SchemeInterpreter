@@ -59,7 +59,6 @@ def scheme_apply(procedure, args, env):
     if isinstance(procedure, PrimitiveProcedure):
         return apply_primitive(procedure, args, env)
     elif isinstance(procedure, LambdaProcedure):
-        "*** YOUR CODE HERE ***"
         currentEnv = procedure.env
         frame = currentEnv.make_call_frame(procedure.formals, args)
         value = scheme_eval(procedure.body, frame)
@@ -80,7 +79,6 @@ def apply_primitive(procedure, args, env):
     >>> apply_primitive(plus, twos, env)
     4
     """
-    "*** YOUR CODE HERE ***"
     argList = []
     i = 0
     while i < args.__len__():
@@ -113,7 +111,6 @@ class Frame:
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL.  Errors if SYMBOL is not found."""
-        "*** YOUR CODE HERE ***"
         if symbol in self.bindings:
             return self.bindings[symbol]
         elif self.parent is not None:
@@ -141,7 +138,6 @@ class Frame:
         <{a: 1, b: 2, c: 3} -> <Global Frame>>
         """
         frame = Frame(self)
-        "*** YOUR CODE HERE ***"
         check_formals(formals)
         i = 0
         while i < formals.__len__():
@@ -210,7 +206,6 @@ def do_lambda_form(vals, env):
     check_form(vals, 2)
     formals = vals[0]
     check_formals(formals)
-    "*** YOUR CODE HERE ***"
     if vals.__len__() > 2:
         editedVals = vals.second
         body = Pair("begin", editedVals)
@@ -227,7 +222,6 @@ def do_mu_form(vals):
     check_form(vals, 2)
     formals = vals[0]
     check_formals(formals)
-    "*** YOUR CODE HERE ***"
     if vals.__len__() > 2:
         editedVals = vals.second
         body = Pair("begin", editedVals)
@@ -244,11 +238,9 @@ def do_define_form(vals, env):
     target = vals[0]
     if scheme_symbolp(target):
         check_form(vals, 2, 2)
-        "*** YOUR CODE HERE ***"
         env.bindings[target] = scheme_eval(vals[1], env)
         return target
     elif isinstance(target, Pair):
-        "*** YOUR CODE HERE ***"
         check_formals(target)
         name = target[0]
         if target.__len__() >= 3:
@@ -271,7 +263,6 @@ def do_define_form(vals, env):
 def do_quote_form(vals):
     """Evaluate a quote form with parameters VALS."""
     check_form(vals, 1, 1)
-    "*** YOUR CODE HERE ***"
     return vals[0]
 
 
@@ -285,7 +276,6 @@ def do_let_form(vals, env):
 
     # Add a frame containing bindings
     names, values = nil, nil
-    "*** YOUR CODE HERE ***"
     for binding in bindings:
         check_form(binding, 2)
         names = Pair(binding[0], names)
@@ -306,7 +296,6 @@ def do_let_form(vals, env):
 def do_if_form(vals, env):
     """Evaluate if form with parameters VALS in environment ENV."""
     check_form(vals, 2, 3)
-    "*** YOUR CODE HERE ***"
     if vals.__len__() == 3:
         if (scheme_true(scheme_eval(vals[0], env))):
             return vals[1]
@@ -320,7 +309,6 @@ def do_if_form(vals, env):
 
 def do_and_form(vals, env):
     """Evaluate short-circuited and with parameters VALS in environment ENV."""
-    "*** YOUR CODE HERE ***"
     i = 0
     length = vals.__len__()
     while i < length:
@@ -346,7 +334,6 @@ def quote(value):
 
 def do_or_form(vals, env):
     """Evaluate short-circuited or with parameters VALS in environment ENV."""
-    "*** YOUR CODE HERE ***"
     i = 0
     length = vals.__len__()
     while i < length:
@@ -372,7 +359,6 @@ def do_cond_form(vals, env):
         else:
             test = scheme_eval(clause.first, env)
         if scheme_true(test):
-            "*** YOUR CODE HERE ***"
             if (clause.__len__() > 2):
                 return (LOGIC_FORMS['begin'](clause.second, env))
             else:
@@ -385,7 +371,6 @@ def do_cond_form(vals, env):
 def do_begin_form(vals, env):
     """Evaluate begin form with parameters VALS in environment ENV."""
     check_form(vals, 1)
-    "*** YOUR CODE HERE ***"
     i = 0
     numIndexes = vals.__len__()
     finalIndex = numIndexes - 1
@@ -425,7 +410,6 @@ def check_formals(formals):
 
     >>> check_formals(read_line("(a b c)"))
     """
-    "*** YOUR CODE HERE ***"
     checked = []
     for element in formals:
         if (scheme_symbolp(element)):
@@ -461,7 +445,6 @@ def scheme_optimized_eval(expr, env):
         # Evaluate Combinations
         if (scheme_symbolp(first) # first might be unhashable
             and first in LOGIC_FORMS):
-            "*** YOUR CODE HERE ***"
             expr = LOGIC_FORMS[first](rest, env)
         elif first == "lambda":
             return do_lambda_form(rest, env)
@@ -472,10 +455,8 @@ def scheme_optimized_eval(expr, env):
         elif first == "quote":
             return do_quote_form(rest)
         elif first == "let":
-            "*** YOUR CODE HERE ***"
             expr, env = do_let_form(rest, env)
         else:
-            "*** YOUR CODE HERE ***"
             procedure = scheme_optimized_eval(first, env)
             args = rest.map(lambda operand: scheme_optimized_eval(operand, env))
             #replaces return scheme_apply(procedure, args, env)
@@ -483,12 +464,10 @@ def scheme_optimized_eval(expr, env):
             if isinstance(procedure, PrimitiveProcedure):
                 return apply_primitive(procedure, args, env)
             elif isinstance(procedure, LambdaProcedure):
-                "*** YOUR CODE HERE ***"
                 currentEnv = procedure.env
                 env = currentEnv.make_call_frame(procedure.formals, args)
                 expr = procedure.body
             elif isinstance(procedure, MuProcedure):
-                "*** YOUR CODE HERE ***"
                 env = env.make_call_frame(procedure.formals, args)
                 expr = procedure.body
             else:
